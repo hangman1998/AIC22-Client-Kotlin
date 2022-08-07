@@ -1,33 +1,28 @@
-import ai.*
-import io.grpc.ManagedChannelBuilder
+import ai.AI
+import ai.Phone
+import ai.PoliceAI
+import ai.ThiefAI
 import io.grpc.Channel
+import io.grpc.ManagedChannelBuilder
 import protobuf.AIProto.*
 import protobuf.GameHandlerGrpc
 import protobuf.GameHandlerGrpc.GameHandlerBlockingStub
-import protobuf.GameHandlerGrpc.GameHandlerStub
 
 
-object Main {
-    @Throws(Exception::class)
-    @JvmStatic
-    fun main(args: Array<String>) {
-        val token: String = try {
-            args[0]
-        } catch (e: IndexOutOfBoundsException) {
-            throw Exception("No token provided. Please provide a token as the first argument to the program.")
-        }
-        val handler = ClientHandler(
-            ManagedChannelBuilder.forAddress("127.0.0.1", 7000).usePlaintext().build(), token
-        )
-        handler.handleClient()
+fun main(args: Array<String>) {
+    val token: String = try {
+        args[0]
+    } catch (e: IndexOutOfBoundsException) {
+        throw Exception("No token provided. Please provide a token as the first argument to the program.")
     }
+    val handler = ClientHandler(
+        ManagedChannelBuilder.forAddress("127.0.0.1", 7000).usePlaintext().build(), token
+    )
+    handler.handleClient()
 }
 
 
-
-
 class ClientHandler(channel: Channel, token: String?) {
-    private val nonBlockingStub: GameHandlerStub = GameHandlerGrpc.newStub(channel)
     private val blockingStub: GameHandlerBlockingStub = GameHandlerGrpc.newBlockingStub(channel)
     private val commandImpl: CommandImpl
     private var ai: AI? = null
