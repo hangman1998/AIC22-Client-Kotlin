@@ -10,11 +10,6 @@ import static io.grpc.stub.ServerCalls.asyncServerStreamingCall;
 import static io.grpc.stub.ServerCalls.asyncUnaryCall;
 import static io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall;
 
-/**
- */
-@javax.annotation.Generated(
-    value = "by gRPC proto compiler (version 1.4.0)",
-    comments = "Source: AIProto.proto")
 public final class GameHandlerGrpc {
 
   private GameHandlerGrpc() {}
