@@ -1,13 +1,12 @@
 import ai.PoliceAI
 import ai.ThiefAI
-import protobuf.AIProto
-import protobuf.GameHandlerGrpc
-import protobuf.GameHandlerGrpc.GameHandlerBlockingStub
 import io.grpc.Channel
+import io.grpc.ManagedChannelBuilder
+import protobuf.AIProto
 import protobuf.AIProto.DeclareReadinessCommand
 import protobuf.AIProto.WatchCommand
-
-import io.grpc.ManagedChannelBuilder
+import protobuf.GameHandlerGrpc
+import protobuf.GameHandlerGrpc.GameHandlerBlockingStub
 
 const val SERVER = "127.0.0.1"
 const val PORT = 7000
@@ -24,30 +23,19 @@ fun main(args: Array<String>) {
 
 class CommandImpl(private val token: String) {
     fun createWatchCommand(): WatchCommand {
-        return WatchCommand.newBuilder()
-            .setToken(token)
-            .build()
+        return WatchCommand.newBuilder().setToken(token).build()
     }
 
     fun declareReadinessCommand(startingNodeId: Int): DeclareReadinessCommand {
-        return DeclareReadinessCommand.newBuilder()
-            .setStartNodeId(startingNodeId)
-            .setToken(token)
-            .build()
+        return DeclareReadinessCommand.newBuilder().setStartNodeId(startingNodeId).setToken(token).build()
     }
 
     fun createMoveCommand(nodeId: Int): AIProto.MoveCommand {
-        return AIProto.MoveCommand.newBuilder()
-            .setToken(token)
-            .setToNodeId(nodeId)
-            .build()
+        return AIProto.MoveCommand.newBuilder().setToken(token).setToNodeId(nodeId).build()
     }
 
     fun createChatCommand(message: String?): AIProto.ChatCommand {
-        return AIProto.ChatCommand.newBuilder()
-            .setToken(token)
-            .setText(message)
-            .build()
+        return AIProto.ChatCommand.newBuilder().setToken(token).setText(message).build()
     }
 }
 
@@ -109,7 +97,7 @@ class ClientHandler(channel: Channel, token: String) : Phone {
         }
     }
 
-    private  fun initialize(gameView: AIProto.GameView) {
+    private fun initialize(gameView: AIProto.GameView) {
         setAIMethod(gameView.viewer.type == AIProto.AgentType.POLICE)
         val startingNodeId = ai.getStartingNode(gameViewFromProto(gameView))
         val declareReadinessCommand = commandImpl.declareReadinessCommand(startingNodeId)
@@ -121,8 +109,7 @@ class ClientHandler(channel: Channel, token: String) : Phone {
     }
 
     private fun setAIMethod(isPolice: Boolean) {
-        if (isPolice)
-            ai = PoliceAI(this)
+        if (isPolice) ai = PoliceAI(this)
     }
 
     private fun move(gameView: AIProto.GameView) {

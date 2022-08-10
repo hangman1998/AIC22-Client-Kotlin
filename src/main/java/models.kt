@@ -23,16 +23,14 @@ data class GameView(
 )
 
 fun gameViewFromProto(proto: AIProto.GameView): GameView {
-    return GameView(
-        statusFromProto(proto.status),
+    return GameView(statusFromProto(proto.status),
         resultFromProto(proto.result),
         turnFromProto(proto.turn),
         gameConfigFromProto(proto.config),
         agentFromProto(proto.viewer),
         proto.balance,
         proto.visibleAgentsList.map { agentFromProto(it) },
-        proto.chatBoxList.map { chatFromProto(it) }
-    )
+        proto.chatBoxList.map { chatFromProto(it) })
 }
 
 fun statusFromProto(proto: AIProto.GameStatus) = when (proto) {
@@ -56,7 +54,7 @@ fun turnTypeFromProto(proto: AIProto.TurnType) = when (proto) {
     else -> throw Exception()
 }
 
-fun chatFromProto(proto:AIProto.Chat) = Chat(proto.id, proto.fromAgentId, proto.text, proto.timeStamp)
+fun chatFromProto(proto: AIProto.Chat) = Chat(proto.id, proto.fromAgentId, proto.text, proto.timeStamp)
 
 fun turnFromProto(proto: AIProto.Turn) = Turn(proto.turnNumber, turnTypeFromProto(proto.turnType))
 
@@ -66,11 +64,13 @@ fun gameConfigFromProto(proto: AIProto.GameConfig) = GameConfig(
     turnSettingsFromProto(proto.turnSettings),
     chatSettingsFromProto(proto.chatSettings)
 )
+
 fun graphFromProto(proto: AIProto.Graph) =
     Graph(proto.pathsList.map { pathFromProto(it) }, proto.nodesList.map { nodeFromProto(it) })
 
 fun incomeFromProto(proto: AIProto.IncomeSettings) =
     IncomeSettings(proto.policeIncomeEachTurn, proto.thievesIncomeEachTurn)
+
 fun turnSettingsFromProto(proto: AIProto.TurnSettings) = TurnSettings(proto.maxTurns, proto.visibleTurnsList)
 fun chatSettingsFromProto(proto: AIProto.ChatSettings) = ChatSettings(proto.chatBoxMaxSize, proto.chatCostPerCharacter)
 
@@ -85,16 +85,15 @@ fun teamFromProto(proto: AIProto.Team) = when (proto) {
     AIProto.Team.SECOND -> Team.SECOND
     else -> throw Exception()
 }
+
 fun agentTypeFromProto(proto: AIProto.AgentType) = when (proto) {
     AIProto.AgentType.POLICE -> AgentType.POLICE
     AIProto.AgentType.THIEF -> AgentType.THIEF
     else -> throw Exception()
 }
+
 data class GameConfig(
-    val graph: Graph,
-    val IncomeSettings: IncomeSettings,
-    val TurnSettings: TurnSettings,
-    val chatSettings: ChatSettings
+    val graph: Graph, val IncomeSettings: IncomeSettings, val TurnSettings: TurnSettings, val chatSettings: ChatSettings
 )
 
 data class IncomeSettings(val policeIncomeEachTurn: Double, val thiefIncomeEachTurn: Double)
@@ -102,11 +101,7 @@ data class TurnSettings(val maxTurns: Int, val visibleTurns: List<Int>)
 data class ChatSettings(val chatBoxMaxSize: Int, val chatCostPerCharacter: Double)
 
 data class Agent(
-    val id: Int,
-    val team: Team,
-    val type: AgentType,
-    val nodeId: Int,
-    val isDead: Boolean
+    val id: Int, val team: Team, val type: AgentType, val nodeId: Int, val isDead: Boolean
 )
 
 data class Chat(
@@ -124,10 +119,7 @@ fun Turn.next() = Turn(turnNumber + 1, turnType.next())
 data class Graph(val paths: List<Path>, val nodes: List<Node>)
 data class Node(val id: Int)
 data class Path(
-    val id: Int,
-    val firstNodeId: Int,
-    val secondNodeId: Int,
-    val price: Double
+    val id: Int, val firstNodeId: Int, val secondNodeId: Int, val price: Double
 )
 
 enum class Team { FIRST, SECOND }
