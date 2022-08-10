@@ -11,7 +11,15 @@ class PoliceAI(override val phone: Phone) : AI() {
     }
 
     override  fun move(gameView: GameView): Int {
-        TODO("write your police ai code here")
+        val currentLoc = gameView.viewer.nodeId
+        val path = gameView.config.graph.paths.filter { it.firstNodeId == currentLoc || it.secondNodeId == currentLoc }.filter { it.price <= gameView.balance }.randomOrNull()
+        if (path != null){
+            return if (currentLoc == path.firstNodeId)
+                path.secondNodeId
+            else
+                path.firstNodeId
+        }
+        return currentLoc
     }
 
 }
