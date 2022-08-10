@@ -55,7 +55,6 @@
   <properties>
     <maven.compiler.target>17</maven.compiler.target>
     <kotlin.version>1.7.10</kotlin.version>
-    <com.fasterxml.jackson>2.13.3</com.fasterxml.jackson>
     <maven.compiler.source>17</maven.compiler.source>
   </properties>
 </project>
