@@ -1,23 +1,15 @@
 package ai
 
-import protobuf.AIProto.GameView
+import AI
+import GameView
+import Phone
 
-class ThiefAI(phone: Phone?) : AI() {
-    init {
-        this.phone = phone
+class ThiefAI(override val phone: Phone) : AI() {
+    override  fun getStartingNode(gameView: GameView): Int {
+        TODO("write your thief ai code here")
     }
 
-    /**
-     * Used to select the starting node.
-     */
-    override fun getStartingNode(gameView: GameView?): Int {
-        return 2
-    }
-
-    /**
-     * Implement this function to move your thief agent based on current game view.
-     */
-    override fun move(gameView: GameView?): Int {
-        return 2
+    override  fun move(gameView: GameView): Int {
+        TODO("write your thief ai code here")
     }
 }
