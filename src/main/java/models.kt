@@ -10,6 +10,8 @@ abstract class AI {
     abstract fun move(gameView: GameView): Int
 }
 
+val JOKER_OR_THIEF = setOf(AIProto.AgentType.JOKER, AIProto.AgentType.THIEF)
+val BATMAN_OR_POLICE = setOf(AIProto.AgentType.BATMAN, AIProto.AgentType.POLICE)
 
 data class GameView(
     val status: GameStatus,
@@ -66,7 +68,13 @@ fun gameConfigFromProto(proto: AIProto.GameConfig) = GameConfig(
 )
 
 fun graphFromProto(proto: AIProto.Graph) =
-    Graph(proto.pathsList.map { pathFromProto(it) }, proto.nodesList.map { nodeFromProto(it) })
+    Graph(
+        proto.pathsList.map { pathFromProto(it) },
+        proto.nodesList.map { nodeFromProto(it) },
+        proto.visibleRadiusXPoliceThief,
+        proto.visibleRadiusYPoliceJoker,
+        proto.visibleRadiusZThiefBatman
+    )
 
 fun incomeFromProto(proto: AIProto.IncomeSettings) =
     IncomeSettings(proto.policeIncomeEachTurn, proto.thievesIncomeEachTurn)
@@ -89,6 +97,8 @@ fun teamFromProto(proto: AIProto.Team) = when (proto) {
 fun agentTypeFromProto(proto: AIProto.AgentType) = when (proto) {
     AIProto.AgentType.POLICE -> AgentType.POLICE
     AIProto.AgentType.THIEF -> AgentType.THIEF
+    AIProto.AgentType.JOKER -> AgentType.JOKER
+    AIProto.AgentType.BATMAN -> AgentType.BATMAN
     else -> throw Exception()
 }
 
@@ -116,7 +126,13 @@ data class Turn(val turnNumber: Int, val turnType: TurnType)
 fun Turn.next() = Turn(turnNumber + 1, turnType.next())
 
 
-data class Graph(val paths: List<Path>, val nodes: List<Node>)
+data class Graph(
+    val paths: List<Path>, val nodes: List<Node>,
+    val visibleRadiusXPoliceThief: Int,
+    val visibleRadiusYPoliceJoker: Int,
+    val visibleRadiusZThiefBatman: Int
+)
+
 data class Node(val id: Int)
 data class Path(
     val id: Int, val firstNodeId: Int, val secondNodeId: Int, val price: Double
@@ -124,7 +140,7 @@ data class Path(
 
 enum class Team { FIRST, SECOND }
 enum class TurnType { THIEF_TURN, POLICE_TURN }
-enum class AgentType { THIEF, POLICE }
+enum class AgentType { THIEF, POLICE, JOKER, BATMAN }
 enum class GameStatus { PENDING, ONGOING, FINISHED }
 enum class GameResult { UNKNOWN, FIRST_WINS, SECOND_WINS, TIE }
 

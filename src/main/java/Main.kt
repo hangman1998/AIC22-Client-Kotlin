@@ -81,8 +81,8 @@ class ClientHandler(channel: Channel, token: String) : Phone {
     }
 
     private fun canMove(gameView: AIProto.GameView): Boolean {
-        if (gameView.turn.turnType == AIProto.TurnType.POLICE_TURN && gameView.viewer.type == AIProto.AgentType.THIEF) return false
-        if (gameView.turn.turnType == AIProto.TurnType.THIEF_TURN && gameView.viewer.type == AIProto.AgentType.POLICE) return false
+        if (gameView.turn.turnType == AIProto.TurnType.POLICE_TURN && gameView.viewer.type in JOKER_OR_THIEF) return false
+        if (gameView.turn.turnType == AIProto.TurnType.THIEF_TURN && gameView.viewer.type in BATMAN_OR_POLICE) return false
         return if (gameView.turn.turnNumber == turn) {
             !hasMoved
         } else true
@@ -98,7 +98,7 @@ class ClientHandler(channel: Channel, token: String) : Phone {
     }
 
     private fun initialize(gameView: AIProto.GameView) {
-        setAIMethod(gameView.viewer.type == AIProto.AgentType.POLICE)
+        setAIMethod(gameView.viewer.type in BATMAN_OR_POLICE)
         val startingNodeId = ai.getStartingNode(gameViewFromProto(gameView))
         val declareReadinessCommand = commandImpl.declareReadinessCommand(startingNodeId)
         try {
